@@ -1,10 +1,8 @@
 node
 {
-    
     def jobName = currentBuild.fullDisplayName
-    def mailToRecipients = 'sumanmech22@outlook.com'
-    def useremail ='sumanmadan41@gmail.com'
-    
+    def mailToRecipients = 'jenkinstest2241@gmail.com'
+    def useremail = 'sumanmadan41@gmail.com'
     stage('send mail')
     {
         echo "waiting for conformation"
@@ -22,7 +20,7 @@ node
         recipientProviders: [[$class: 'CulpritsRecipientProvider']]
         
         try {
-          userInput = input sumitter: 'suman' , message: 'Do you approve?'
+          userInput = input submitter: 'suman' , message: 'Do you approve?'
     } catch (org.jenkinsci.plugins.workflow.steps.FlowInterruptedException e) {
       cause = e.caused.get(0)
       echo "Aborted by " + caused.getUser().toString()

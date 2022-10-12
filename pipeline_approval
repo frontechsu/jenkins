@@ -1,0 +1,28 @@
+node
+{
+    stage('Build')
+    {
+        echo "Build"
+    }
+    stage('Test')
+    {
+        def userAborted = false
+        try {
+          userInput = input sumitter: 'suman' , message: 'Do you approve?'
+    } catch (org.jenkinsci.plugins.workflow.steps.FlowInterruptedException e) {
+      cause = e.caused.get(0)
+      echo "Aborted by " + caused.getUser().toString()
+            userAborted = true
+         echo " System Aborted, but looks like timeout period didn't complete, Aborting." 
+    }
+    if (userAborted) {
+        currentBuild.result = 'ABORTED'
+    } else {
+        echo "testing"
+    }
+    }
+    stage('Deploy')
+    {
+        echo "Deploy"
+    }
+}

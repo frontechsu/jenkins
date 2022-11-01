@@ -1,0 +1,33 @@
+pipeline{
+    agent {label 'ubuntu slave'}
+    
+    environment {
+        DOCKERHUB_CREDENTIALS=credentials('docker_hub')
+    }
+    
+    stages {
+        stage('gitclone'){
+            git 'https://github.com/frontechsu/nodeapp_test.git'
+        }
+    }
+    stage('Build'){
+        steps {
+            sh 'docker build -t frontechsu/deployment1:latest.'
+        }
+    }
+    stage('login') {
+        steps {
+            sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+        }
+    }
+    stage('push'){
+        steps{
+            sh 'docker push frontechsu/deployment1:latest'
+        }
+    }
+}
+post {
+    always {
+        sh 'docker logout'
+    }
+}

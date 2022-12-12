@@ -60,4 +60,49 @@ pipeline {
     }
   }
 }
+//////////////////////////////////////////////////////////////////////////////////////////
+pipeline {
+  agent any
+
+  stages {
+    stage('Email approval') {
+      steps {
+        script {
+          def email = 'user@example.com'
+          def subject = "Approval needed for Jenkins pipeline"
+          def body = "Please approve the Jenkins pipeline by clicking on the link below:\n"
+          def approvalLink = "${env.BUILD_URL}/input"
+
+          sh """
+          python -c "import smtplib
+                   from email.message import EmailMessage
+
+                   msg = EmailMessage()
+                   msg.set_content('$body $approvalLink')
+                   msg['Subject'] = '$subject'
+                   msg['From'] = 'jenkins@example.com'
+                   msg['To'] = '$email'
+
+                   s = smtplib.SMTP('localhost')
+                   s.send_message(msg)"
+          """
+
+          input message: "Approval needed", ok: "Approve", submitter: email
+        }
+      }
+    }
+
+    stage('Build') {
+      steps {
+        // build steps go here
+      }
+    }
+
+    stage('Deploy') {
+      steps {
+        // deploy steps go here
+      }
+    }
+  }
+}
 

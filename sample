@@ -1,0 +1,63 @@
+pipeline { 
+    agent any 
+    stages { 
+        stage('Build') { 
+            steps { 
+        // build steps go here 
+        } 
+            
+        } 
+        stage('Approval') { 
+            steps { 
+                input message: 'Are you sure you want to deploy this build?', 
+                id: 'approval', 
+                submitter: 'jenkinstest2241@gmail.com''sam' 
+                
+            } 
+            
+        } 
+        stage('Deploy') { 
+            steps { 
+        // deployment steps go here 
+        }
+            
+        }
+        
+    }
+    
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+pipeline {
+  agent any
+
+  stages {
+    stage('Email approval') {
+      steps {
+        script {
+          def email = 'user@example.com'
+          def subject = "Approval needed for Jenkins pipeline"
+          def body = "Please approve the Jenkins pipeline by clicking on the link below:\n"
+          def approvalLink = "${env.BUILD_URL}/input"
+
+          mail to: email, subject: subject, body: body
+
+          input message: "Approval needed", ok: "Approve", submitter: email
+        }
+      }
+    }
+
+    stage('Build') {
+      steps {
+        // build steps go here
+      }
+    }
+
+    stage('Deploy') {
+      steps {
+        // deploy steps go here
+      }
+    }
+  }
+}
+
